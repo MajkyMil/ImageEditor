@@ -2,6 +2,7 @@
     x:Class="ImageEditor.View.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:ImageEditor.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:zoomBorder="clr-namespace:ImageEditor.View.ViewHelpers"
@@ -9,6 +10,9 @@
     Width="800"
     Height="600"
     mc:Ignorable="d">
+    <Window.Resources>
+        <converters:MultiValueConverter x:Key="MultiValueConverter" />
+    </Window.Resources>
 
     <Grid Margin="2">
         <Grid.ColumnDefinitions>
@@ -95,9 +99,15 @@
                     x:Name="ConfirmCrop_Button"
                     Margin="2"
                     Command="{Binding ConfirmCropCommand}"
-                    CommandParameter="{Binding ElementName=selectionRectangle}"
                     Content="Confirm crop"
-                    Visibility="Hidden" />
+                    Visibility="Hidden">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                            <Binding ElementName="selectionRectangle" />
+                            <Binding ElementName="BackPanel" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
                 <Button
                     Name="Undo_Button"
                     Margin="2"
