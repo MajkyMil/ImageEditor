@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using ImageEditor.View.ViewHelpers;
+using ImageMagick;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Windows.Storage.Streams;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ImageEditor.ViewModel
 {
@@ -141,7 +144,7 @@ namespace ImageEditor.ViewModel
 
                 ImageProperties.Add("Width", BitmapImage.Width.ToString());
                 ImageProperties.Add("Height", BitmapImage.Height.ToString());
-                ImageProperties.Add("UriSource", BitmapImage.UriSource.ToString());
+                ImageProperties.Add("UriSource", BitmapImage.UriSource.AbsolutePath);
 
             }
         }
@@ -157,7 +160,8 @@ namespace ImageEditor.ViewModel
             {
                 try
                 {
-                    SaveImage(saveFileDialog.FileName);
+                    //SaveImage(saveFileDialog.FileName);
+                    SaveImageByMagick(saveFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -221,9 +225,55 @@ namespace ImageEditor.ViewModel
             }
         }
 
+        private void SaveImageByMagick(string fileName)
+        {
+            var extension = System.IO.Path.GetExtension(fileName);
+
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {           
+                BitmapEncoder encoder = new BmpBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(BitmapImage));
+                encoder.Save(memoryStream);
+                memoryStream.Position = 0;
+
+                using (MagickImage image = new MagickImage(memoryStream))
+                {
+                    image.Rotate(RotateAngle);
+                    //TODO: 
+                    //image.Crop();
+
+
+                    switch (extension)
+                    {
+                        case ".tif":
+                        case ".tiff":
+                            image.Write(fileName, MagickFormat.Tiff);
+                            break;
+                        case ".jpg":
+                        case ":jpeg":
+                            image.Write(fileName, MagickFormat.Jpg);
+                            break;
+                        case ".j2k":
+                            break;
+                        case ".jp2":
+
+                            break;
+                        case ".png":
+                            image.Write(fileName, MagickFormat.Png);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+            }
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
+
