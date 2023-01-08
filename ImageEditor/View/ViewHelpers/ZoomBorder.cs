@@ -11,6 +11,7 @@ namespace ImageEditor.View.ViewHelpers
         private UIElement child = null;
         private Point origin;
         private Point start;
+        private double minimumImageZoom;
 
         private TranslateTransform GetTranslateTransform(UIElement element)
         {
@@ -53,6 +54,8 @@ namespace ImageEditor.View.ViewHelpers
                 this.MouseMove += child_MouseMove;
                 this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
                   child_PreviewMouseRightButtonDown);
+
+                minimumImageZoom = Properties.Settings.Default.MinimumImageZoom;
             }
         }
 
@@ -98,7 +101,7 @@ namespace ImageEditor.View.ViewHelpers
                 var tt = GetTranslateTransform(child);
 
                 double zoom = e.Delta > 0 ? .1 : -.1;
-                if (!(e.Delta > 0) && (st.ScaleX < .3 || st.ScaleY < .3))
+                if (!(e.Delta > 0) && (st.ScaleX < minimumImageZoom || st.ScaleY < minimumImageZoom))
                     return;
 
                 Point relative = e.GetPosition(child);

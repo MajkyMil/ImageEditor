@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using ImageEditor.View.ViewHelpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,118 +20,107 @@ namespace ImageEditor.ViewModel
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private BitmapImage bitmapImage;
-
-        public BitmapImage BitmapImage
-        {
-            get { return bitmapImage; }
-            set
-            {
-                bitmapImage = value;
-                OnPropertyChanged();
-            }
-        }
+        public BitmapImage BitmapImage { get => bitmapImage; set { bitmapImage = value; OnPropertyChanged(); } }
+        private Stack<BitmapImage> bitmapImageStack;
+        public Stack<BitmapImage> BitmapImageStack { get => bitmapImageStack; set => bitmapImageStack = value; }
 
         private double rotateAngle;
-
-        public double RotateAngle
-        {
-            get { return rotateAngle; }
-            set
-            {
-                rotateAngle = value;
-                OnPropertyChanged();
-            }
-        }
+        public double RotateAngle { get => rotateAngle; set => rotateAngle = value; }
 
         private bool saveButtonEnabled;
-
         public bool SaveButtonEnabled
         {
-            get { return saveButtonEnabled; }
-            set
-            {
-                saveButtonEnabled = value;
-                OnPropertyChanged();
-            }
+            get => saveButtonEnabled; set { saveButtonEnabled = value; OnPropertyChanged(); }
         }
 
         private Dictionary<string, string> imageProperties;
-
         public Dictionary<string, string> ImageProperties
         {
-            get { return imageProperties; }
-            set
-            {
-                imageProperties = value;
-                OnPropertyChanged();
-            }
+            get => imageProperties; set { imageProperties = value; OnPropertyChanged(); }
         }
-
 
         public RelayCommand LoadImageCommand { get; }
         public RelayCommand SaveImageCommand { get; }
         public RelayCommand<object[]> ConfirmCropCommand { get; }
         public RelayCommand UndoCropCommand { get; }
 
-
         public MainWindowViewModel()
         {
             LoadImageCommand = new RelayCommand(LoadImage);
-            SaveImageCommand = new RelayCommand(OnSaveImage);
+            SaveImageCommand = new RelayCommand(OnSaveImage, () => BitmapImage != null);
             ConfirmCropCommand = new RelayCommand<object[]>(OnConfirmCrop);
             UndoCropCommand = new RelayCommand(OnUndoCrop);
 
-            BitmapImage = new BitmapImage();
+            this.BitmapImage = new BitmapImage();
             ImageProperties = new Dictionary<string, string>();
+            BitmapImageStack = new Stack<BitmapImage>();
         }
 
         private void OnUndoCrop()
-        {            
-            throw new NotImplementedException();
+        {
+            if (BitmapImageStack.Count > 1)
+                BitmapImageStack.Pop();
+
+            if (BitmapImageStack.Count != 0)
+            {
+                BitmapImage = BitmapImageStack.Count == 1
+                    ? BitmapImageStack.Peek()
+                    : BitmapImageStack.Pop();
+            }
         }
 
         private void OnConfirmCrop(object[] param)
         {
-            var cropRectangle = param[0] as Rectangle;
-            var canvas = param[1] as Canvas;
-
-            double x = Canvas.GetLeft(cropRectangle);
-            double y = Canvas.GetTop(cropRectangle);
-            double width = cropRectangle.Width;
-            double height = cropRectangle.Height;
-
-            CroppedBitmap croppedBitmap = new CroppedBitmap(BitmapImage,
-                new Int32Rect((int)x, (int)y, (int)width, (int)height));
-
-            BitmapImage croppedBitmapImage = new BitmapImage();
-
-
-            using (MemoryStream memory = new MemoryStream())
+            try
             {
-                BmpBitmapEncoder encoder = new BmpBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(croppedBitmap));
-                encoder.Save(memory);
-                memory.Position = 0;
+                BitmapImageStack.Push(BitmapImage);
+                var cropRectangle = param[0] as Rectangle;
+                var canvas = param[1] as Canvas;
+                var zoomBorder = param[2] as ZoomBorder;
 
-                croppedBitmapImage.BeginInit();
-                croppedBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                croppedBitmapImage.StreamSource = memory;
-                croppedBitmapImage.EndInit();
+                if (cropRectangle != null && canvas != null && zoomBorder != null)
+                {
+                    var canvasRectangle = canvas.Children.OfType<Rectangle>().FirstOrDefault();
+
+                    if (canvasRectangle != null)
+                    {
+                        // HACK
+                        var magicConstant = 0.75;
+
+                        var x = Convert.ToInt32(Canvas.GetLeft(canvasRectangle) * magicConstant);
+                        var y = Convert.ToInt32(Canvas.GetTop(canvasRectangle) * magicConstant);
+                        var width = Convert.ToInt32(canvasRectangle.Width * magicConstant);
+                        var height = Convert.ToInt32(canvasRectangle.Height * magicConstant);
+
+                        CroppedBitmap croppedBitmap = new CroppedBitmap(BitmapImage,
+                            new Int32Rect(x, y, width, height));
+
+                        BitmapImage croppedBitmapImage = new BitmapImage();
+
+
+                        using (MemoryStream memory = new MemoryStream())
+                        {
+                            BmpBitmapEncoder encoder = new BmpBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(croppedBitmap));
+                            encoder.Save(memory);
+                            memory.Position = 0;
+
+                            croppedBitmapImage.BeginInit();
+                            croppedBitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                            croppedBitmapImage.StreamSource = memory;
+                            croppedBitmapImage.EndInit();
+                        }
+
+                        BitmapImage = croppedBitmapImage;
+                        zoomBorder.Reset();
+                        cropRectangle.Visibility = Visibility.Collapsed;
+                    }
+                }
             }
-
-            BitmapImage = croppedBitmapImage; 
-
-            //    var imageByteArray = mainWindowViewModel.CropImage((byte[])imageStack.Peek(), Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(width), Convert.ToInt32(height));
-            //    image.Source = mainWindowViewModel.GetBitmapSource(imageByteArray);
-            //    imageStack.Push(imageByteArray);
-
-            //    DisableCropMouseEvent();
-            //    border.EnableMouseEvent();
-            //    ToggleCrop_Button.IsChecked = false;
-            //    Undo_Button.Visibility = Visibility.Visible;
-            //    ConfirmCrop_Button.Visibility = Visibility.Hidden;
-            //    selectionRectangle.Visibility = Visibility.Hidden;
-            //    border.Reset();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), ex.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadImage()
@@ -150,8 +141,6 @@ namespace ImageEditor.ViewModel
 
                 ImageProperties.Add("Width", BitmapImage.Width.ToString());
                 ImageProperties.Add("Height", BitmapImage.Height.ToString());
-                // ImageProperties.Add("Rotation", BitmapImage.Rotation.ToString());
-                ImageProperties.Add("SourceRect", BitmapImage.SourceRect.ToString());
                 ImageProperties.Add("UriSource", BitmapImage.UriSource.ToString());
 
             }
@@ -161,7 +150,7 @@ namespace ImageEditor.ViewModel
         {
             var saveFileDialog = new SaveFileDialog();
 
-            saveFileDialog.FileName = BitmapImage.UriSource.LocalPath;// mainWindowViewModel.ImageProperties["ImageName"];
+            saveFileDialog.FileName = System.IO.Path.GetFileName(ImageProperties["UriSource"]);
             saveFileDialog.FilterIndex = 0;
             saveFileDialog.Filter = "All files (*.*)|*.*|JPG - JPG/JPEG Format|*.jpg|JP2 - JPEG 2000 Format|*.jp2|J2K - J2K Format|*.j2k|PNG - Portable Network Graphics|*.png|TIF - Tagged Image File Format|*.tiff";
             if (saveFileDialog.ShowDialog() == true)
@@ -181,22 +170,22 @@ namespace ImageEditor.ViewModel
         {
             var extension = System.IO.Path.GetExtension(fileName);
 
-            Image image = new Image();
-            image.Source = BitmapImage;
+            //Image image = new Image();
+            //image.Source = BitmapImage;
 
             RotateTransform rotateTransform = new RotateTransform(RotateAngle);
-            //TransformedBitmap transformedImage = new TransformedBitmap(BitmapImage, rotateTransform);
-            image.RenderTransform = rotateTransform;
+            TransformedBitmap transformedImage = new TransformedBitmap(BitmapImage, rotateTransform);
 
-            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)image.Source.Width, (int)image.Source.Height, 96, 96, PixelFormats.Pbgra32);
-            renderBitmap.Render(image);
+            //image.RenderTransform = rotateTransform;
+            //RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)image.Source.Width, (int)image.Source.Height, 96, 96, PixelFormats.Pbgra32);
+            //renderBitmap.Render(image);
 
             switch (extension)
             {
                 case ".tif":
                 case ".tiff":
                     var tiffEncoder = new TiffBitmapEncoder();
-                    tiffEncoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                    tiffEncoder.Frames.Add(BitmapFrame.Create(transformedImage));
                     using (FileStream stream = new FileStream(fileName, FileMode.Create))
                     {
                         tiffEncoder.Save(stream);
@@ -206,7 +195,7 @@ namespace ImageEditor.ViewModel
                 case ":jpeg":
                     var jpegEncoder = new JpegBitmapEncoder();
                     jpegEncoder.QualityLevel = 90; // nastavte kvalitu obrázku v rozmezí 0-100
-                    jpegEncoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                    jpegEncoder.Frames.Add(BitmapFrame.Create(transformedImage));
 
                     using (FileStream stream = new FileStream(fileName, FileMode.Create))
                     {
@@ -220,7 +209,7 @@ namespace ImageEditor.ViewModel
                     break;
                 case ".png":
                     var pngEncoder = new PngBitmapEncoder();
-                    pngEncoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                    pngEncoder.Frames.Add(BitmapFrame.Create(transformedImage));
 
                     using (FileStream stream = new FileStream(fileName, FileMode.Create))
                     {

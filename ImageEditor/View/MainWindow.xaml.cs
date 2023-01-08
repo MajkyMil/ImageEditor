@@ -24,8 +24,6 @@ namespace ImageEditor.View
             mainWindowViewModel = viewModel;
         }
 
-
-
         private void Crop_Button_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)((ToggleButton)sender).IsChecked)
@@ -44,46 +42,7 @@ namespace ImageEditor.View
                 Undo_Button.Visibility = Visibility.Hidden;
 
             }
-        }
-
-        //private void ConfirmCrop_Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    double x = Canvas.GetLeft(selectionRectangle);
-        //    double y = Canvas.GetTop(selectionRectangle);
-        //    double width = selectionRectangle.Width;
-        //    double height = selectionRectangle.Height;
-
-        //    x = x * 1.25;
-        //    y = y * 1.25;
-        //    width = width * 1.25;
-        //    height = height * 1.25;
-
-        //    var imageByteArray = mainWindowViewModel.CropImage((byte[])imageStack.Peek(), Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(width), Convert.ToInt32(height));
-        //    image.Source = mainWindowViewModel.GetBitmapSource(imageByteArray);
-        //    imageStack.Push(imageByteArray);
-
-        //    DisableCropMouseEvent();
-        //    border.EnableMouseEvent();
-        //    ToggleCrop_Button.IsChecked = false;
-        //    Undo_Button.Visibility = Visibility.Visible;
-        //    ConfirmCrop_Button.Visibility = Visibility.Hidden;
-        //    selectionRectangle.Visibility = Visibility.Hidden;
-        //    border.Reset();
-        //}
-
-        //private void Undo_Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (imageStack.Count > 1)
-        //        imageStack.Pop();
-
-        //    if (imageStack.Count != 0)
-        //    {
-        //        image.Source = imageStack.Count == 1
-        //            ? mainWindowViewModel.GetBitmapSource((byte[])imageStack.Peek())
-        //            : mainWindowViewModel.GetBitmapSource((byte[])imageStack.Pop());
-        //    }
-        //}
-
+        }   
 
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
