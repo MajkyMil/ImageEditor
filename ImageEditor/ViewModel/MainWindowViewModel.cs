@@ -229,7 +229,6 @@ namespace ImageEditor.ViewModel
         {
             var extension = System.IO.Path.GetExtension(fileName);
 
-
             using (MemoryStream memoryStream = new MemoryStream())
             {           
                 BitmapEncoder encoder = new BmpBitmapEncoder();
@@ -239,10 +238,7 @@ namespace ImageEditor.ViewModel
 
                 using (MagickImage image = new MagickImage(memoryStream))
                 {
-                    image.Rotate(RotateAngle);
-                    //TODO: 
-                    //image.Crop();
-
+                    image.Rotate(RotateAngle);                    
 
                     switch (extension)
                     {
