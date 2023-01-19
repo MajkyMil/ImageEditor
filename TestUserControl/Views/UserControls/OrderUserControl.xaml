@@ -1,0 +1,54 @@
+﻿<UserControl
+    x:Class="TestUserControl.Views.UserControls.OrderUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TestUserControl.Views.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="200"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <GroupBox>
+        <Grid Margin="6">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel
+                Grid.Row="0"
+                Orientation="Horizontal">
+                <Label
+                    Width="20"
+                    Margin="3"
+                    Content="{Binding Id}" />
+                <TextBox
+                    Width="60"
+                    Margin="3"
+                    Text="{Binding Name}" />
+                <TextBlock
+                    Width="60"
+                    Margin="3"
+                    Text="{Binding Description}" />
+                <Button
+                    Margin="3"
+                    Command="{Binding DeleteOrderCommand}"
+                    Content="Delete" />
+                <Button
+                    Margin="3"
+                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:OrderUserControl}}, Path=AddItemCommand}"
+                    Content="Add Item" />
+            </StackPanel>
+
+            <ListBox
+                Grid.Row="1"
+                ItemsSource="{Binding Items}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <local:ItemUserControl />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </GroupBox>
+</UserControl>
