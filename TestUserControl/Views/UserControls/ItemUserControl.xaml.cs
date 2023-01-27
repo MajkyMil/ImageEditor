@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,19 @@ namespace TestUserControl.Views.UserControls
     /// </summary>
     public partial class ItemUserControl : UserControl
     {
+
+        public RelayCommand<object> DeleteItemCommand
+        {
+            get { return (RelayCommand<object>)GetValue(DeleteItemCommandProperty); }
+            set { SetValue(DeleteItemCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DeleteItemCommandProperty =
+            DependencyProperty.Register("DeleteItemCommand", typeof(RelayCommand<object>), typeof(ItemUserControl));
+
+
+
         public ItemUserControl()
         {
             InitializeComponent();

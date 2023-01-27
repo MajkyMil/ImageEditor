@@ -32,11 +32,13 @@
                     Text="{Binding Description}" />
                 <Button
                     Margin="3"
-                    Command="{Binding DeleteOrderCommand}"
+                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:OrderUserControl}}, Path=DeleteOrderCommand}"
+                    CommandParameter="{Binding Id}"
                     Content="Delete" />
                 <Button
                     Margin="3"
                     Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:OrderUserControl}}, Path=AddItemCommand}"
+                    CommandParameter="{Binding Id}"
                     Content="Add Item" />
             </StackPanel>
 
@@ -45,7 +47,7 @@
                 ItemsSource="{Binding Items}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <local:ItemUserControl />
+                        <local:ItemUserControl DeleteItemCommand="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:OrderUserControl}}, Path=DeleteItemCommand}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

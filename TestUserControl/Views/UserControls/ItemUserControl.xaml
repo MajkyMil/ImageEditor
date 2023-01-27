@@ -26,7 +26,8 @@
             Margin="3"
             Text="{Binding Price}" />
         <Button
-            Command="{Binding DeleteItemCommand}"
+            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:OrderUserControl}}, Path=DeleteItemCommand}"
+            CommandParameter="{Binding Id}"
             Content="Delete" />
     </StackPanel>
 </UserControl>

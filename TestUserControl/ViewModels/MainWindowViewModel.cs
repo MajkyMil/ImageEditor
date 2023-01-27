@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Linq;
 using TestUserControl.Models;
 
@@ -16,35 +17,36 @@ namespace TestUserControl.ViewModels
 
         public RelayCommand<object> AddOrderCommand { get; set; }
         public RelayCommand DeleteAllOrderCommand { get; set; }
-        public RelayCommand DeleteOrderCommand { get; set; }
-        public RelayCommand AddItemCommand { get; set; }
-        public RelayCommand DeleteItemCommand { get; set; }
+        public RelayCommand<object> DeleteOrderCommand { get; set; }
+        public RelayCommand<object> AddItemCommand { get; set; }
+        public RelayCommand<object> DeleteItemCommand { get; set; }
 
         public MainWindowViewModel()
         {
             Orders = new ObservableCollection<Order>();
             AddOrderCommand = new RelayCommand<object>(AddOrder);
             DeleteAllOrderCommand = new RelayCommand(DeleteAllOrder);
-            DeleteOrderCommand = new RelayCommand(DeleteOrder);
-            AddItemCommand = new RelayCommand(AddItem);
-            DeleteItemCommand = new RelayCommand(DeleteItem);
+            DeleteOrderCommand = new RelayCommand<object>(DeleteOrder);
+            AddItemCommand = new RelayCommand<object>(AddItem);
+            DeleteItemCommand = new RelayCommand<object>(DeleteItem);
 
             InitData();
         }
 
-        private void DeleteItem()
+        private void DeleteItem(object param)
         {
-            throw new NotImplementedException();
+            //TODO:
+            MessageBox.Show(param?.ToString());
         }
 
-        private void AddItem()
+        private void AddItem(object param)
         {
-            throw new NotImplementedException();
+            Orders.First(x => x.Id == (int)param).Items.ToList().Add(new Item() { Id = (int)param });
         }
 
-        private void DeleteOrder()
+        private void DeleteOrder(object param)
         {
-            throw new NotImplementedException();
+            Orders.RemoveAt((int)param);
         }
 
         private void AddOrder(object param)
@@ -63,29 +65,29 @@ namespace TestUserControl.ViewModels
             {
                 Id = 1,
                 Name = "První objednávka",
-                //Items = new List<Item> {
-                //    new Item { Name = "První položka", Id = 1 },
-                //    new Item { Id = 2, Name = "Druhá položka" }
-                //}
+                Items = new List<Item> {
+                    new Item { Name = "První položka", Id = 1 },
+                    new Item { Id = 2, Name = "Druhá položka" }
+                }
             });
-            //Orders.Add(new Order
-            //{
-            //    Id = 2,
-            //    Name = "Druhá objednávka",
-            //    Items = new List<Item> {
-            //        new Item { Name = "Třetí položka", Id = 3 },
-            //        new Item { Id = 4, Name = "Čtvrtá položka" },
-            //        new Item { Id = 5, Name = "Pátá položka" }
-            //    }
-            //});
-            //Orders.Add(new Order
-            //{
-            //    Id = 3,
-            //    Name = "Třetí objednávka",
-            //    Items = new List<Item> {
-            //        new Item { Name = "Šestá položka", Id = 6 }
-            //    }
-            //});
+            Orders.Add(new Order
+            {
+                Id = 2,
+                Name = "Druhá objednávka",
+                Items = new List<Item> {
+                    new Item { Name = "Třetí položka", Id = 3 },
+                    new Item { Id = 4, Name = "Čtvrtá položka" },
+                    new Item { Id = 5, Name = "Pátá položka" }
+                }
+            });
+            Orders.Add(new Order
+            {
+                Id = 3,
+                Name = "Třetí objednávka",
+                Items = new List<Item> {
+                    new Item { Name = "Šestá položka", Id = 6 }
+                }
+            });
         }
     }
 }

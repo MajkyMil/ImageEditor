@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:usercontrols="clr-namespace:TestUserControl.Views.UserControls"
+    x:Name="Main_Window"
     Title="MainWindow"
     Width="1080"
     Height="600"
@@ -24,8 +25,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <usercontrols:OrderUserControl
-                            AddItemCommand="{Binding Path=DataContext.AddItemCommand}"
-                            DeleteOrderCommand="{Binding DeleteItemCommand, XPath=DataContext}" />
+                            AddItemCommand="{Binding ElementName=Main_Window, Path=DataContext.AddItemCommand}"
+                            DeleteItemCommand="{Binding ElementName=Main_Window, Path=DataContext.DeleteItemCommand}"
+                            DeleteOrderCommand="{Binding ElementName=Main_Window, Path=DataContext.DeleteOrderCommand}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -39,7 +41,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button
-                                Command="{Binding DeleteItemCommand}"
+                                Command="{Binding ElementName=Main_Window, Path=DataContext.DeleteItemCommand}"
                                 Content="delete" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
