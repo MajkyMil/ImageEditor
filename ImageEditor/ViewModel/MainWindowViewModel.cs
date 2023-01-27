@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -228,9 +229,12 @@ namespace ImageEditor.ViewModel
         private void SaveImageByMagick(string fileName)
         {
             var extension = System.IO.Path.GetExtension(fileName);
+            Stopwatch stopWatch = Stopwatch.StartNew();
 
             using (MemoryStream memoryStream = new MemoryStream())
             {           
+             
+
                 BitmapEncoder encoder = new BmpBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(BitmapImage));
                 encoder.Save(memoryStream);
@@ -264,6 +268,12 @@ namespace ImageEditor.ViewModel
                     }
                 }
             }
+            stopWatch.Stop();
+            TimeSpan ts = stopWatch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+            MessageBox.Show(elapsedTime);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
