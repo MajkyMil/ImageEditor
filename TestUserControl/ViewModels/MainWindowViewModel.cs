@@ -78,7 +78,21 @@ namespace TestUserControl.ViewModels
                     new Item { Name = "Třetí položka", Id = 3 },
                     new Item { Id = 4, Name = "Čtvrtá položka" },
                     new Item { Id = 5, Name = "Pátá položka" }
-                }
+                },
+                OrderChilds = new List<Order> {
+                    new Order
+            {
+                Id = 2,
+                Name = "Druhá objednávka",
+                Items = new List<Item> {
+                    new Item { Name = "Třetí položka", Id = 3 },
+                    new Item { Id = 4, Name = "Čtvrtá položka" },
+                    new Item { Id = 5, Name = "Pátá položka" }            } , OrderChilds= new List<Order>
+                    {
+                        new Order { OrderChilds= new List<Order> { new Order { } }}
+                    }
+                   }
+            }
             });
             Orders.Add(new Order
             {

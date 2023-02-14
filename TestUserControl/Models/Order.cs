@@ -12,5 +12,6 @@ namespace TestUserControl.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public IEnumerable<Item> Items { get; set; }
+        public IEnumerable<Order> OrderChilds { get; set; }
     }
 }

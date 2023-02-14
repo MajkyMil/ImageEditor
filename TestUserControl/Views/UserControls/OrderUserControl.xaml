@@ -13,6 +13,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
+
             </Grid.RowDefinitions>
 
             <StackPanel
@@ -51,6 +53,16 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <ItemsControl
+                Grid.Row="2"
+                ItemsSource="{Binding OrderChilds}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:OrderUserControl />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
     </GroupBox>
 </UserControl>
