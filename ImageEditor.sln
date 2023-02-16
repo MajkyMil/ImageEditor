@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageEditor", "ImageEditor\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestUserControl", "TestUserControl\TestUserControl.csproj", "{3F5D2CEC-6FD6-4CDC-990C-9E238F32A5C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrationHandler", "MigrationHandler\MigrationHandler.csproj", "{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{3F5D2CEC-6FD6-4CDC-990C-9E238F32A5C2}.Release|x64.Build.0 = Release|Any CPU
 		{3F5D2CEC-6FD6-4CDC-990C-9E238F32A5C2}.Release|x86.ActiveCfg = Release|x86
 		{3F5D2CEC-6FD6-4CDC-990C-9E238F32A5C2}.Release|x86.Build.0 = Release|x86
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|x64.Build.0 = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Debug|x86.Build.0 = Debug|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|x64.ActiveCfg = Release|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|x64.Build.0 = Release|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|x86.ActiveCfg = Release|Any CPU
+		{8554FF82-58AC-4B9D-9B9F-732C24B6BD89}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

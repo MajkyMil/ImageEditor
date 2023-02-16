@@ -1,0 +1,8 @@
+﻿<Application
+    x:Class="MigrationHandler.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MigrationHandler"
+    Startup="OnStartup">
+    <Application.Resources />
+</Application>

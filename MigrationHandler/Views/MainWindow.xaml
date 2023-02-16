@@ -1,0 +1,28 @@
+﻿<Window
+    x:Class="MigrationHandler.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MigrationHandler"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid
+                Grid.Column="0"
+                ItemsSource="{Binding Blogs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <DataGrid
+                Grid.Column="1"
+                ItemsSource="{Binding Migrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+        <StatusBar DockPanel.Dock="Bottom" />
+    </DockPanel>
+</Window>
