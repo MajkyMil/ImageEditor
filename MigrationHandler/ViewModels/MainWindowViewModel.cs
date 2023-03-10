@@ -31,10 +31,10 @@ namespace MigrationHandler.ViewModels
 
         public void InitTestData()
         {
-            _dbContext.Blogs.Add(new Blog() { Url = "Test url"});
-            _dbContext.Blogs.Add(new Blog() { Url = "Url 1" });
-            _dbContext.Blogs.Add(new Blog() { Url = "Url 2" });
-            _dbContext.SaveChanges();
+            //_dbContext.Blogs.Add(new Blog() { Url = "Test url"});
+            //_dbContext.Blogs.Add(new Blog() { Url = "Url 1" });
+            //_dbContext.Blogs.Add(new Blog() { Url = "Url 2" });
+            //_dbContext.SaveChanges();
         }
     }
 }
