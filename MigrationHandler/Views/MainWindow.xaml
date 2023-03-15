@@ -12,16 +12,20 @@
     <DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <DataGrid
                 Grid.Column="0"
-                ItemsSource="{Binding Blogs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                ItemsSource="{Binding Migrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <DataGrid
                 Grid.Column="1"
-                ItemsSource="{Binding Migrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                ItemsSource="{Binding ApplieMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <DataGrid
+                Grid.Column="2"
+                ItemsSource="{Binding PendingMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
         <StatusBar DockPanel.Dock="Bottom" />
     </DockPanel>
