@@ -19,13 +19,30 @@
 
             <DataGrid
                 Grid.Column="0"
-                ItemsSource="{Binding Migrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Migrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding}"
+                        Header="Name" />
+                </DataGrid.Columns>
+            </DataGrid>
             <DataGrid
                 Grid.Column="1"
-                ItemsSource="{Binding ApplieMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding ApplieMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding}" />
+                </DataGrid.Columns>
+            </DataGrid>
             <DataGrid
                 Grid.Column="2"
-                ItemsSource="{Binding PendingMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding PendingMigrations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
         <StatusBar DockPanel.Dock="Bottom" />
     </DockPanel>
