@@ -23,7 +23,7 @@ namespace MigrationHandler.ViewModels
             Migrations = new ObservableCollection<string>(_dbContext.Database.GetMigrations());
             ApplieMigrations = new ObservableCollection<string>(_dbContext.Database.GetAppliedMigrations());
             PendingMigrations = new ObservableCollection<string>(_dbContext.Database.GetPendingMigrations());
-           
+            
         }
     }
 }
